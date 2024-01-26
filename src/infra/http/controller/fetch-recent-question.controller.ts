@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { ZodValidationPipe } from '../pipes/zod-validation-pipe'
 import { JwtAuthGaurd } from '@/infra/authenticate/jwt-auth-guard'
 import { FetchRecentQuestionUseCase } from '@/domain/forum/application/use-cases/fetch-recent-question'
+import { HttpQuestionPresenter } from '../presenters/http-question-presenter'
 
 const pageQueryParamSchema = z
   .string()
@@ -32,12 +33,20 @@ export class FetchRecentQuestionController {
       },
     }) */
 
-    const questions = await this.fetchRecentQuestionUseCase.execute({
+    const result = await this.fetchRecentQuestionUseCase.execute({
       page,
     })
 
+    if (result.isLeft()) {
+      return new Error()
+    }
+
+    const questions = result.value.questions
+
     return {
-      questions,
+      questions: questions.map((question) => {
+        return HttpQuestionPresenter.toHttp(question)
+      }),
     }
   }
 }
