@@ -10,7 +10,7 @@ export interface QuestionProps {
   title: string
   content: string
   authorId: UniqueEntityId
-  bestAnswerId?: UniqueEntityId
+  bestAnswerId?: UniqueEntityId | null
   attachment: QuestionAttachmentList
   slug: Slug
   createdAt: Date
