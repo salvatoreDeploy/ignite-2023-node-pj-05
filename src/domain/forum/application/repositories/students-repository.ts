@@ -1,6 +1,6 @@
-import { Stundet } from '../../enterprise/entities/students'
+import { Student } from '../../enterprise/entities/students'
 
 export abstract class StudentsRepository {
-  abstract findByEmail(email: string): Promise<Stundet | null>
-  abstract create(student: Stundet): Promise<void>
+  abstract findByEmail(email: string): Promise<Student | null>
+  abstract create(student: Student): Promise<void>
 }
