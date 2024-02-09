@@ -2,27 +2,64 @@ import { PaginationParams } from '@/core/repositories/pagination-params'
 import { IAnswerCommentsRepository } from '@/domain/forum/application/repositories/answer-comments-repository'
 import { AnswerComment } from '@/domain/forum/enterprise/entities/answer-comment'
 import { Injectable } from '@nestjs/common'
+import { PrismaService } from '../prisma.service'
+import { PrismaAnswerCommentMapper } from '../mappers/prisma-answer-comment-mapper'
 
 @Injectable()
 export class PrismaAnswerCommentsRepository
   implements IAnswerCommentsRepository
 {
-  create(answer: AnswerComment): Promise<void> {
-    throw new Error('Method not implemented.')
+  constructor(private prisma: PrismaService) {}
+
+  async create(answerComment: AnswerComment): Promise<void> {
+    const data = PrismaAnswerCommentMapper.toPrisma(answerComment)
+
+    await this.prisma.comment.create({
+      data,
+    })
   }
 
-  delete(answer: AnswerComment): Promise<void> {
-    throw new Error('Method not implemented.')
+  async findById(id: string): Promise<AnswerComment> {
+    const answerComment = await this.prisma.comment.findUnique({
+      where: {
+        id,
+      },
+    })
+
+    if (!answerComment) {
+      return null
+    }
+
+    return PrismaAnswerCommentMapper.toDomain(answerComment)
   }
 
-  findById(id: string): Promise<AnswerComment> {
-    throw new Error('Method not implemented.')
-  }
-
-  findManyByAnswerId(
+  async findManyByAnswerId(
     answerId: string,
-    params: PaginationParams,
+    { page }: PaginationParams,
   ): Promise<AnswerComment[]> {
-    throw new Error('Method not implemented.')
+    const answerComments = await this.prisma.comment.findMany({
+      where: {
+        answerId,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      take: 20,
+      skip: (page - 1) * 20,
+    })
+
+    return answerComments.map((answerComment) => {
+      return PrismaAnswerCommentMapper.toDomain(answerComment)
+    })
+  }
+
+  async delete(answerComment: AnswerComment): Promise<void> {
+    const data = PrismaAnswerCommentMapper.toPrisma(answerComment)
+
+    await this.prisma.comment.delete({
+      where: {
+        id: data.id,
+      },
+    })
   }
 }
