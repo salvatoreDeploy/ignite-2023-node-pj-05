@@ -30,8 +30,6 @@ describe('Authenticate Student', () => {
 
     await inMemoryStudentsRepository.create(student)
 
-    console.log(student)
-
     const result = await sut.execute({
       email: 'joedoe@email.com',
       password: '123456',
