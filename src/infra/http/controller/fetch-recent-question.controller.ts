@@ -1,13 +1,6 @@
-import {
-  BadRequestException,
-  Controller,
-  Get,
-  Query,
-  UseGuards,
-} from '@nestjs/common'
+import { BadRequestException, Controller, Get, Query } from '@nestjs/common'
 import { z } from 'zod'
 import { ZodValidationPipe } from '../pipes/zod-validation-pipe'
-import { JwtAuthGaurd } from '@/infra/authenticate/jwt-auth-guard'
 import { FetchRecentQuestionUseCase } from '@/domain/forum/application/use-cases/fetch-recent-question'
 import { HttpQuestionPresenter } from '../presenters/http-question-presenter'
 

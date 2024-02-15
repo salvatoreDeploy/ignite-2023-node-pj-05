@@ -1,14 +1,13 @@
 import { PaginationParams } from '@/core/repositories/pagination-params'
 import { QuestionComment } from '../../enterprise/entities/question-comment'
 
-interface IQuestionCommentsRepository {
-  create(question: QuestionComment): Promise<void>
-  findById(id: string): Promise<QuestionComment | null>
-  findManyByQuestionId(
+export abstract class IQuestionCommentsRepository {
+  abstract create(question: QuestionComment): Promise<void>
+  abstract findById(id: string): Promise<QuestionComment | null>
+  abstract findManyByQuestionId(
     questionId: string,
     params: PaginationParams,
   ): Promise<QuestionComment[]>
-  delete(questionComment: QuestionComment): Promise<void>
-}
 
-export { IQuestionCommentsRepository }
+  abstract delete(questionComment: QuestionComment): Promise<void>
+}

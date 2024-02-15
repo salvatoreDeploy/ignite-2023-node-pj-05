@@ -1,15 +1,14 @@
 import { PaginationParams } from '@/core/repositories/pagination-params'
 import { Answer } from '../../enterprise/entities/answer'
 
-interface IAnswerRepository {
-  create(answer: Answer): Promise<void>
-  findById(id: string): Promise<Answer | null>
-  findManyByQuestionId(
+export abstract class IAnswerRepository {
+  abstract create(answer: Answer): Promise<void>
+  abstract findById(id: string): Promise<Answer | null>
+  abstract findManyByQuestionId(
     questionId: string,
     params: PaginationParams,
   ): Promise<Answer[]>
-  delete(answer: Answer): Promise<void>
-  save(answer: Answer): Promise<void>
-}
 
-export { IAnswerRepository }
+  abstract delete(answer: Answer): Promise<void>
+  abstract save(answer: Answer): Promise<void>
+}
