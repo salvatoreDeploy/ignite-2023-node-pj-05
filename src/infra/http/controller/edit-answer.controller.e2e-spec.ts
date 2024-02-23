@@ -41,7 +41,7 @@ describe('Edit answer (E2E)', () => {
       authorId: user.id,
     })
 
-    const answer = await answerFactory.makePrismaQuestion({
+    const answer = await answerFactory.makePrismaAnswer({
       questionId: question.id,
       authorId: user.id,
     })

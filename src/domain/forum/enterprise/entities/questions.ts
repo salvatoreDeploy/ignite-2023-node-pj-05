@@ -45,12 +45,20 @@ export class Questions extends AggregateRoot<QuestionProps> {
     return this.props.bestAnswerId
   }
 
-  set bestAnswerId(bestAnswerId: UniqueEntityId | undefined) {
-    this.props.bestAnswerId = bestAnswerId
+  set bestAnswerId(bestAnswerId: UniqueEntityId | undefined | null) {
+    if (bestAnswerId === undefined || bestAnswerId === null) {
+      return
+    }
 
-    if (bestAnswerId && bestAnswerId !== this.props.bestAnswerId) {
+    if (
+      this.props.bestAnswerId === undefined ||
+      this.props.bestAnswerId === null ||
+      !bestAnswerId.equals(this.props.bestAnswerId)
+    ) {
       this.addDomainEvent(new QuestionBestAnswerChooseEvent(this, bestAnswerId))
     }
+
+    this.props.bestAnswerId = bestAnswerId
 
     this.touch()
   }

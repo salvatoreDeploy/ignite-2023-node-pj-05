@@ -9,12 +9,11 @@ import { AnswerFactory } from 'test/factories/makeAnswer'
 import { QuestionFactory } from 'test/factories/makeQuestion'
 import { StudentFactory } from 'test/factories/makeStudent'
 
-describe('Delete question (E2E)', () => {
+describe('Comment on question (E2E)', () => {
   let app: INestApplication
   let prisma: PrismaService
   let studentFactory: StudentFactory
   let questionFactory: QuestionFactory
-  let answerFactory: AnswerFactory
   let jwt: JwtService
 
   beforeAll(async () => {
@@ -24,16 +23,14 @@ describe('Delete question (E2E)', () => {
     }).compile()
 
     app = moduleRef.createNestApplication()
-
     prisma = moduleRef.get(PrismaService)
     studentFactory = moduleRef.get(StudentFactory)
     questionFactory = moduleRef.get(QuestionFactory)
-    answerFactory = moduleRef.get(AnswerFactory)
     jwt = moduleRef.get(JwtService)
 
     await app.init()
   })
-  test('[Delete] /answers/:id', async () => {
+  test('[POST] /questions/:questionId/comments', async () => {
     const user = await studentFactory.makePrismaStudent()
 
     const accessToken = jwt.sign({ sub: user.id.toString() })
@@ -42,26 +39,23 @@ describe('Delete question (E2E)', () => {
       authorId: user.id,
     })
 
-    const answer = await answerFactory.makePrismaAnswer({
-      authorId: user.id,
-      questionId: question.id,
-    })
-
-    const answerId = answer.id.toString()
+    const questionId = question.id.toString()
 
     const response = await request(app.getHttpServer())
-      .delete(`/answers/${answerId}`)
+      .post(`/questions/${questionId}/comments`)
       .set('Authorization', `Bearer ${accessToken}`)
-      .send()
+      .send({
+        content: 'New comment',
+      })
 
-    expect(response.statusCode).toBe(204)
+    expect(response.statusCode).toBe(201)
 
-    const questionOnDatabase = await prisma.question.findUnique({
+    const questionOnDatabase = await prisma.comment.findFirst({
       where: {
-        id: answerId,
+        content: 'New comment',
       },
     })
 
-    expect(questionOnDatabase).toBeNull()
+    expect(questionOnDatabase).toBeTruthy()
   })
 })
