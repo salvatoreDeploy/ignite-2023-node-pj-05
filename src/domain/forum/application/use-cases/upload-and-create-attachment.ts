@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common'
 import { InvalidAttachmentTypeError } from './errors/invalid-attchment-type'
 import { Attachment } from '../../enterprise/entities/attachment'
 import { AttachmentsRepository } from '../repositories/attachment-repositoriy'
-import { Uploader } from './uploader'
+import { Uploader } from '../storage/uploader'
 
 interface UploadAndCreateAttachmentUseCaseRequest {
   fileName: string
@@ -30,7 +30,7 @@ export class UploadAndCreateAttachmentUseCase {
     fileType,
     body,
   }: UploadAndCreateAttachmentUseCaseRequest): Promise<UploadAndCreateAttachmentUseCaseResponse> {
-    if (!/^(image\/(jpeg|png))$|^application\/pdf$/.test(fileType)) {
+    if (!/^(image\/(jpeg|png|jpg))$|^application\/pdf$/.test(fileType)) {
       return left(new InvalidAttachmentTypeError(fileType))
     }
 
