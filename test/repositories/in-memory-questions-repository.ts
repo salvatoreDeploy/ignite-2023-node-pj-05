@@ -15,6 +15,8 @@ export class InMemoryQuestionsRepository implements IQuestionsRepository {
   async create(question: Questions): Promise<void> {
     this.items.push(question)
 
+    await this.questionAttchmentRepository.createMany(question.attachment.getItems())
+
     DomainEvents.dispatchEventsForAggregate(question.id)
   }
 
@@ -58,6 +60,10 @@ export class InMemoryQuestionsRepository implements IQuestionsRepository {
     const itemIndex = this.items.findIndex((item) => item.id === question.id)
 
     this.items[itemIndex] = question
+
+    await this.questionAttchmentRepository.createMany(question.attachment.getNewItems())
+
+    await this.questionAttchmentRepository.deleteMany(question.attachment.getRemovedItems())
 
     DomainEvents.dispatchEventsForAggregate(question.id)
   }

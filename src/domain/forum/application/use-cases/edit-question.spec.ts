@@ -70,6 +70,47 @@ describe('Edit Question', () => {
     ])
   })
 
+  it('Should sync new and removed attachments when editing a question', async () => {
+    const newQuestion = makeQuestion(
+      { authorId: new UniqueEntityId('author-1') },
+      new UniqueEntityId('question-1'),
+    )
+
+    await inMemoryQuestionsRepository.create(newQuestion)
+
+    inMemoryQuestionAttchmentRepository.items.push(
+      makeQuestionAttchment({
+        questionId: newQuestion.id,
+        attachmentId: new UniqueEntityId('1'),
+      }),
+      makeQuestionAttchment({
+        questionId: newQuestion.id,
+        attachmentId: new UniqueEntityId('2'),
+      }),
+    )
+
+    const result = await sut.execute({
+      authorId: 'author-1',
+      questionId: 'question-1',
+      title: 'Pergunta editada',
+      content: 'Conteudo editado',
+      attachmentsIds: ['1', '3'],
+    })
+
+    expect(result.isRight()).toBe(true)
+    expect(inMemoryQuestionAttchmentRepository.items).toHaveLength(2)
+    expect(inMemoryQuestionAttchmentRepository.items).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          attachmentId: new UniqueEntityId('1'),
+        }),
+        expect.objectContaining({
+          attachmentId: new UniqueEntityId('3'),
+        }),
+      ]),
+    )
+  })
+
   it('Should not be able to edit question from another User', async () => {
     const newQuestion = makeQuestion(
       { authorId: new UniqueEntityId('author-1') },
