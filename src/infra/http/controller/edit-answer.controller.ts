@@ -14,13 +14,14 @@ import { EditAnswerUseCase } from '@/domain/forum/application/use-cases/edit.ans
 
 const editAnswerBodySchema = z.object({
   content: z.string(),
+  attachments: z.array(z.string().uuid()).default([]),
 })
 
 type EditAnswer = z.infer<typeof editAnswerBodySchema>
 
 const bodyValidationPipe = new ZodValidationPipe(editAnswerBodySchema)
 
-@Controller('/answer/:id')
+@Controller('/answers/:id')
 export class EditAnswerController {
   constructor(private editAnswer: EditAnswerUseCase) {}
 
@@ -31,13 +32,13 @@ export class EditAnswerController {
     @CurrentUser() user: TokenPayload,
     @Param('id') answerId: string,
   ) {
-    const { content } = body
+    const { content, attachments } = body
 
     const userId = user.sub
 
     const result = await this.editAnswer.execute({
       answerId,
-      attachmentsIds: [],
+      attachmentsIds: attachments,
       authorId: userId,
       content,
     })
