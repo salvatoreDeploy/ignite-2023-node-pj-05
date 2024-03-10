@@ -14,12 +14,16 @@ import {
 import { makeQuestion } from 'test/factories/makeQuestion'
 import { MockInstance } from 'vitest'
 import { waitFor } from 'test/utils/wait-for'
+import { InMemoryStudentsRepository } from 'test/repositories/in-memory-student-repository'
+import { InMemoryUploadAndCreateAttachmentRepository } from 'test/repositories/in-memory-upload-and-create-attachment'
 
 let inMemoryQuestionsAttchmentsRepository: InMemoryQuestionAttchmentRepository
 let inMemoryQuestionsRepository: InMemoryQuestionsRepository
 let inMemoryAnswerRepository: InMemoryAnswerRepository
 let inMmemoryAttachmentsRepository: InMemoryAnswerAttachmentRepository
 let inMemoryNotificationRepository: InMemoryNotificationsRepository
+let inMemoryStudentsRepository: InMemoryStudentsRepository
+let inMemoryUploadAndCreateAttachmentRepository: InMemoryUploadAndCreateAttachmentRepository
 let sendNotificationUseCase: SendNotificationUseCase
 
 let sendNotificationNotificationSpy: MockInstance<
@@ -36,8 +40,13 @@ describe('On Question Best Answer Chosen', () => {
 
     inMemoryQuestionsAttchmentsRepository =
       new InMemoryQuestionAttchmentRepository()
+    inMemoryStudentsRepository = new InMemoryStudentsRepository()
+    inMemoryUploadAndCreateAttachmentRepository =
+      new InMemoryUploadAndCreateAttachmentRepository()
     inMemoryQuestionsRepository = new InMemoryQuestionsRepository(
       inMemoryQuestionsAttchmentsRepository,
+      inMemoryUploadAndCreateAttachmentRepository,
+      inMemoryStudentsRepository,
     )
 
     inMemoryNotificationRepository = new InMemoryNotificationsRepository()

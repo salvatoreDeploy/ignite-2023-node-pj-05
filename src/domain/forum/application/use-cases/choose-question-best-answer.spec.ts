@@ -7,11 +7,15 @@ import { makeQuestion } from 'test/factories/makeQuestion'
 import { ResourceNotFoundError } from '../../../../core/errors/resource-not-found-error'
 import { InMemoryAnswerAttachmentRepository } from 'test/repositories/in-memory-answer-attchment-repository'
 import { InMemoryQuestionAttchmentRepository } from 'test/repositories/in-memory-question-attchment-repository'
+import { InMemoryStudentsRepository } from 'test/repositories/in-memory-student-repository'
+import { InMemoryUploadAndCreateAttachmentRepository } from 'test/repositories/in-memory-upload-and-create-attachment'
 
 let inMemoryAnswerRepository: InMemoryAnswerRepository
 let inMemoryQuestionRepository: InMemoryQuestionsRepository
 let inMemoryAnswerAttachmentRepository: InMemoryAnswerAttachmentRepository
 let inMemoryQuestionAttachmentRepository: InMemoryQuestionAttchmentRepository
+let inMemoryStudentsRepository: InMemoryStudentsRepository
+let inMemoryUploadAndCreateAttachmentRepository: InMemoryUploadAndCreateAttachmentRepository
 let sut: ChooseQuestionBestAnswerUseCase
 
 describe('Choose Question Best Answer', () => {
@@ -20,12 +24,17 @@ describe('Choose Question Best Answer', () => {
       new InMemoryAnswerAttachmentRepository()
     inMemoryQuestionAttachmentRepository =
       new InMemoryQuestionAttchmentRepository()
+    inMemoryStudentsRepository = new InMemoryStudentsRepository()
+    inMemoryUploadAndCreateAttachmentRepository =
+      new InMemoryUploadAndCreateAttachmentRepository()
     inMemoryAnswerRepository = new InMemoryAnswerRepository(
       inMemoryAnswerAttachmentRepository,
     )
 
     inMemoryQuestionRepository = new InMemoryQuestionsRepository(
       inMemoryQuestionAttachmentRepository,
+      inMemoryUploadAndCreateAttachmentRepository,
+      inMemoryStudentsRepository,
     )
 
     sut = new ChooseQuestionBestAnswerUseCase(

@@ -5,17 +5,26 @@ import { UniqueEntityId } from '@/core/entities/value-objects/unique-entity-id'
 import { ResourceNotFoundError } from '../../../../core/errors/resource-not-found-error'
 import { InMemoryQuestionAttchmentRepository } from 'test/repositories/in-memory-question-attchment-repository'
 import { makeQuestionAttchment } from 'test/factories/makeQuestionAttchment'
+import { InMemoryStudentsRepository } from 'test/repositories/in-memory-student-repository'
+import { InMemoryUploadAndCreateAttachmentRepository } from 'test/repositories/in-memory-upload-and-create-attachment'
 
 let inMemoryQuestionsRepository: InMemoryQuestionsRepository
 let inMemoryQuestionAttachmentsRepository: InMemoryQuestionAttchmentRepository
+let inMemoryStudentsRepository: InMemoryStudentsRepository
+let inMemoryUploadAndCreateAttachmentRepository: InMemoryUploadAndCreateAttachmentRepository
 let sut: DeleteQuestionUseCase
 
 describe('Delete Question', () => {
   beforeEach(() => {
     inMemoryQuestionAttachmentsRepository =
       new InMemoryQuestionAttchmentRepository()
+    inMemoryStudentsRepository = new InMemoryStudentsRepository()
+    inMemoryUploadAndCreateAttachmentRepository =
+      new InMemoryUploadAndCreateAttachmentRepository()
     inMemoryQuestionsRepository = new InMemoryQuestionsRepository(
       inMemoryQuestionAttachmentsRepository,
+      inMemoryUploadAndCreateAttachmentRepository,
+      inMemoryStudentsRepository,
     )
 
     sut = new DeleteQuestionUseCase(inMemoryQuestionsRepository)

@@ -3,7 +3,7 @@ import { PrismaService } from './prisma/prisma.service'
 import { PrismaAnswerAttachmentRepository } from './prisma/repositories/prisma-answer-attchment-repository'
 import { PrismaAnswerCommentsRepository } from './prisma/repositories/prisma-answer-comments-repository'
 import { PrismaAnswerRepository } from './prisma/repositories/prisma-answer-repository'
-import { PrismaNotificationRepositories } from './prisma/repositories/prisma-notification-repository'
+import { PrismaNotificationsRepository } from './prisma/repositories/prisma-notifications-repository'
 import { PrismaQuestionAttachmentRepository } from './prisma/repositories/prisma-question-attchment-repository'
 import { PrismaQuestionCommentsRepository } from './prisma/repositories/prisma-question-comments-repository'
 import { PrismaQuestionsRepository } from './prisma/repositories/prisma-questions-repository'
@@ -45,7 +45,7 @@ import { PrismaAttachmentsRepository } from './prisma/repositories/prisma-attach
     },
     {
       provide: INotificationsRepository,
-      useClass: PrismaNotificationRepositories,
+      useClass: PrismaNotificationsRepository,
     },
     {
       provide: IQuestionAttchmentsRepository,
