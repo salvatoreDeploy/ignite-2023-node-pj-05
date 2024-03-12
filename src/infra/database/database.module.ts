@@ -18,8 +18,10 @@ import { IQuestionAttchmentsRepository } from '@/domain/forum/application/reposi
 import { IQuestionCommentsRepository } from '@/domain/forum/application/repositories/question-comments-repository'
 import { AttachmentsRepository } from '@/domain/forum/application/repositories/attachment-repositoriy'
 import { PrismaAttachmentsRepository } from './prisma/repositories/prisma-attachments-repository'
+import { CacheModule } from '../cache/cache.module'
 
 @Module({
+  imports: [CacheModule],
   providers: [
     PrismaService,
     PrismaQuestionAttachmentRepository,

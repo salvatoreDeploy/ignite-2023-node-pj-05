@@ -69,6 +69,7 @@ describe('Get question by slug (E2E)', () => {
       .send()
 
     expect(response.statusCode).toBe(200)
+
     expect(response.body).toEqual({
       question: expect.objectContaining({
         title: 'Question 01',
